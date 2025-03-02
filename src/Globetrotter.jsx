@@ -75,7 +75,7 @@ export const Globetrotter = () => {
 
     const fetchClue = async (index) => {
         try {
-          const response = await fetch(`http://localhost:8091/globetrotter/destination/${index}`);
+          const response = await fetch(`http://globethrotter.onrender.com/globetrotter/destination/${index}`);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
