@@ -23,16 +23,14 @@ const OptionButton = styled.button`
   &:hover {
     background-color: #0056b3;
   }
-
 `;
 
-const options = ['dubai','paris','delhi','baglasdesh']
 
-const OptionsContainer = ({handleOptionClick}) => {
+const OptionsContainer = ({options, handleOptionClick}) => {
   return (
     <OptionsWrapper>
       {options.map((option, index) => (
-        <OptionButton key={index} onClick={() => handleOptionClick()}>
+        <OptionButton key={index} onClick={() => handleOptionClick(option)}>
           {option}
         </OptionButton>
       ))}

@@ -21,6 +21,12 @@ const ModalTitle = styled.h2`
 const ModalContent = styled.div`
   font-size: 1rem;
   color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-inline: 50px;
+  margin-block: 20px
+} 
 `;
 
 const NextButton = styled.button`
@@ -40,7 +46,7 @@ const NextButton = styled.button`
 
 `;
 
-const FeedbackModal = ({ isCorrectGuess , handleNextClick}) => {
+const FeedbackModal = ({ isCorrectGuess , handleNextClick,funFact,trivia,score}) => {
   return (
     
       <ModalContainer>
@@ -48,11 +54,17 @@ const FeedbackModal = ({ isCorrectGuess , handleNextClick}) => {
           {isCorrectGuess ? 'Correct!' : 'Try Again!'}
         </ModalTitle>
         <ModalContent>
-          {isCorrectGuess
+          
+         <b> {isCorrectGuess
             ? 'Congratulations, you guessed correctly!'
             : 'Unfortunately, that was not the correct guess. Please try again.'}
+            </b>
+            <div><b>Fun Fact : </b> {funFact}</div>
+            <div><b>Trivia : </b> {trivia}</div>
+       
         </ModalContent>
         <NextButton onClick={() => handleNextClick()} >Next</NextButton>
+       <div> <>  Correct: {score[0]}</>  <>  Incorrect: {score[1]}</></div>
       </ModalContainer>
   
   );
