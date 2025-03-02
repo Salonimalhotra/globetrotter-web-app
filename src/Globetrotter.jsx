@@ -31,7 +31,21 @@ const SubHeading = styled.h2`
   color: #666;
 `;
 
-
+const ResetButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+  flex: 1 1 45%; /* Adjusts the button to take up approximately half the width */
+  margin-right: 20px;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
 export const Globetrotter = () => {
 
     const [showFeedbackModal,setShowFeedbackModal] = useState(false);
@@ -44,6 +58,7 @@ export const Globetrotter = () => {
     const [funFact,setFunfact] = useState('');
     const [trivia,setTrivia] = useState('');
     const [score,setScore] = useState([0,0]);
+    const [showReset,setShowReset] = useState(false);
 
     const handleOptionClick = (option) => {
         if(answer == option){
@@ -61,6 +76,7 @@ export const Globetrotter = () => {
                 newScore[1] += 1; // Update the correct score
                 return newScore;
             });
+            
         }
         setShowFeedbackModal(true);
     }
@@ -70,12 +86,21 @@ export const Globetrotter = () => {
         setShowFeedbackModal(false);
         fetchClue(index+1);
         setIndex(index+1);
+        if(index>=21){
+          setShowReset(true);
+        }
     }
 
+    useEffect(()=>{
+      if(showReset){
+        setIndex(0);
+        fetchClue(index);
+      }
+    },[showReset])
 
     const fetchClue = async (index) => {
         try {
-          const response = await fetch(`http://globethrotter.onrender.com/globetrotter/destination/${index}`);
+          const response = await fetch(`http://localhost:8091/globetrotter/destination/${index}`);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -92,20 +117,27 @@ export const Globetrotter = () => {
     
       useEffect(() => {
         fetchClue(0); // Fetch the clue on component mount
-      }, []);
-
+      }, [showReset]);
+    
+      const handleReset = () => {
+        setScore([0,0]);
+       
+        setShowReset(false);
+      }
   
     return (
         <div>
-
             <Header>Globetrotter</Header>
             <SubHeading>Where in the world ? Take a guess !</SubHeading>
+            
             {isCorrectGuess && <Confetti width={width} height={height} recycle={false} numberOfPieces={400}/>}
-            {showFeedbackModal ? <FeedbackModal isCorrectGuess={isCorrectGuess} handleNextClick={handleNextClick} funFact={funFact} trivia={trivia} score={score}/> :
+            {!showReset && <>{showFeedbackModal ? <FeedbackModal isCorrectGuess={isCorrectGuess} handleNextClick={handleNextClick} funFact={funFact} trivia={trivia} score={score}/> :
             <GameContainer>
                 <ClueContainer clue={clue}/>
                 <OptionsContainer options={options} handleOptionClick={handleOptionClick}/>
-            </GameContainer>}
+            </GameContainer>}</>}
+            {showReset && <><ResetButton onClick={() => handleReset()}>Reset</ResetButton>
+                  Total Correct Answers : {score[0]}</>}
         </div>
     )
 }
